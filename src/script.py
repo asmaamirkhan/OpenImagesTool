@@ -1,5 +1,10 @@
 import argparse
+import cv2
+import xml.etree as tree
 
+def get_ids(folder):
+    for file in os.listdir(folder):
+        fi
 
 if __name__ == "__main__":
     # creating argument parser
