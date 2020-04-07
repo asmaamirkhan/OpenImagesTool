@@ -12,7 +12,8 @@ def construct_voc_xml(input_dir, output_dir, in_dataset, out_dataset, obj, item,
                             LABEL_FOLDER_NAME, item+'.txt')
     img_path = os.path.join(input_dir, in_dataset, obj, item+'.jpg')
 
-    xml_path = os.path.join(output_dir, TF_FOLDER_NAME, out_dataset, item+'.xml')
+    xml_path = os.path.join(output_dir, TF_FOLDER_NAME,
+                            out_dataset, item+'.xml')
 
     txt_file = open(txt_path)
     img_file = cv2.imread(img_path, cv2.IMREAD_UNCHANGED)
@@ -53,7 +54,8 @@ def construct_voc_xml(input_dir, output_dir, in_dataset, out_dataset, obj, item,
         obj_tag = SubElement(root_tag, 'object')
 
         name_tag = SubElement(obj_tag, 'name')
-        name_tag.text = details[0].replace(' ', '_')
+        #name_tag.text = details[0]
+        name_tag.text = str(details[:-4])
 
         pose_tag = SubElement(obj_tag, 'pose')
         pose_tag.text = 'Unspecified'
@@ -66,16 +68,16 @@ def construct_voc_xml(input_dir, output_dir, in_dataset, out_dataset, obj, item,
 
         box_tag = SubElement(obj_tag, 'bndbox')
         xmin_tag = SubElement(box_tag, 'xmin')
-        xmin_tag.text = str(int(float(details[1])))
+        xmin_tag.text = str(int(float(details[-4])))
 
         ymin_tag = SubElement(box_tag, 'ymin')
-        ymin_tag.text = str(int(float(details[2])))
+        ymin_tag.text = str(int(float(details[-3])))
 
         xmax_tag = SubElement(box_tag, 'xmax')
-        xmax_tag.text = str(int(float(details[3])))
+        xmax_tag.text = str(int(float(details[-2])))
 
         ymax_tag = SubElement(box_tag, 'ymax')
-        ymax_tag.text = str(int(float(details[4])))
+        ymax_tag.text = str(int(float(details[-1])))
 
     tree = ET.ElementTree(root_tag)
     tree.write(xml_path)
