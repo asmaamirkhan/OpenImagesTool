@@ -25,37 +25,39 @@ def get_obj_names(folder):
 
 def main(args):
     os.makedirs(os.path.join(args.output_dir, TF_FOLDER_NAME), exist_ok=True)
-    os.makedirs(os.path.join(args.output_dir, TF_FOLDER_NAME,
-                             DATASETS_FOLDERS[1]), exist_ok=True)
-    os.makedirs(os.path.join(args.output_dir, TF_FOLDER_NAME,
-                             DATASETS_FOLDERS[2]), exist_ok=True)
 
     for dataset in DATASETS_FOLDERS:
-        if dataset == DATASETS_FOLDERS[0] and not args.validation:
-            print('ignored')
+        if dataset == DATASETS_FOLDERS[0] and not args.ignore_val:
             continue
-        print(DATASETS_FOLDERS[0], args.validation)
-        print(dataset == DATASETS_FOLDERS[0] and not args.validation)
-        objs = get_obj_names(os.path.join(args.input_dir, dataset))
-        for obj in objs:
-            ids = get_img_ids(os.path.join(args.input_dir, dataset, obj))
-            for counter, item in enumerate(ids):
-                if dataset == DATASETS_FOLDERS[0]:
-                    dest_file = os.path.join(
-                        args.output_dir, TF_FOLDER_NAME, DATASETS_FOLDERS[2], '{}_{}_{}.jpg'.format(obj, DATASETS_FOLDERS[0], counter))
-                    construct_voc_xml(args.input_dir, args.output_dir,
-                                      dataset, DATASETS_FOLDERS[2], obj, item, counter)
+        
+        if os.path.isdir(os.path.join(args.input_dir, dataset)):
+            if dataset == DATASETS_FOLDERS[0] or dataset == DATASETS_FOLDERS[2]:
+                os.makedirs(os.path.join(args.output_dir, TF_FOLDER_NAME, DATASETS_FOLDERS[2]), exist_ok=True)
+            else:
+                os.makedirs(os.path.join(args.output_dir, TF_FOLDER_NAME, dataset), exist_ok=True)
 
-                else:
-                    dest_file = os.path.join(
-                        args.output_dir, TF_FOLDER_NAME, dataset, '{}_{}_{}.jpg'.format(obj, dataset, counter))
-                    construct_voc_xml(
-                        args.input_dir, args.output_dir, dataset, dataset, obj, item, counter)
 
-                input_file = os.path.join(
-                    args.input_dir, dataset, obj, item+'.jpg')
-                print(input_file, dest_file)
-                copyfile(input_file, dest_file)
+
+            objs = get_obj_names(os.path.join(args.input_dir, dataset))
+            for obj in objs:
+                ids = get_img_ids(os.path.join(args.input_dir, dataset, obj))
+                for counter, item in enumerate(ids):
+                    if dataset == DATASETS_FOLDERS[0]:
+                        dest_file = os.path.join(
+                            args.output_dir, TF_FOLDER_NAME, DATASETS_FOLDERS[2], '{}_{}_{}.jpg'.format(obj, DATASETS_FOLDERS[0], counter))
+                        construct_voc_xml(args.input_dir, args.output_dir,
+                                        dataset, DATASETS_FOLDERS[2], obj, item, counter)
+
+                    else:
+                        dest_file = os.path.join(
+                            args.output_dir, TF_FOLDER_NAME, dataset, '{}_{}_{}.jpg'.format(obj, dataset, counter))
+                        construct_voc_xml(
+                            args.input_dir, args.output_dir, dataset, dataset, obj, item, counter)
+
+                    input_file = os.path.join(
+                        args.input_dir, dataset, obj, item+'.jpg')
+                    print(input_file, dest_file)
+                    copyfile(input_file, dest_file)
 
 
 if __name__ == "__main__":
@@ -75,8 +77,8 @@ if __name__ == "__main__":
                         type=str,
                         required=True)
     parser.add_argument('-v',
-                        '--validation',
-                        help='Add validation images to train directory (boolean), default=True',
+                        '--ignore_val',
+                        help='Ignore validation images, default=False',
                         action='store_false')
     args = parser.parse_args()
 
