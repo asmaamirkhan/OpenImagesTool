@@ -66,14 +66,14 @@ images
  src> python script.py -i <INPUT_PATH> -o <OUTPUT_PATH> -v
 ```
 👀 To see running options, run: 
-```
+```bash
 src> python script.py -h
 ```
 
-## 📖 Refernces
+## 📖 References
 - [OIDv4_ToolKit](https://github.com/EscVM/OIDv4_ToolKit)
 - [OIDv4_to_VOC](https://github.com/AtriSaxena/OIDv4_to_VOC/blob/master/OIDv4_to_VOC.py)
 
 
-## 💼 Contact
+## 💼 Contact & Support
 Find me on [LinkedIn](https://www.linkedin.com/in/asmaamirkhan/) and feel free to mail me, [Asmaa 🦋](mailto:asmaamirkhan.am@gmail.com)
