@@ -1,13 +1,13 @@
+# author ~ Asmaa 2020
+
+from xml.dom import minidom
 from xml.etree.ElementTree import Element, SubElement, Comment, tostring
 import xml.etree.cElementTree as ET
 import cv2
 import os
-import xmlformatter
 
 TF_FOLDER_NAME = 'images'
 LABEL_FOLDER_NAME = 'Label'
-
-from xml.dom import minidom
 
 
 def construct_voc_xml(input_dir, output_dir, in_dataset, out_dataset, obj, item, counter):
@@ -30,7 +30,7 @@ def construct_voc_xml(input_dir, output_dir, in_dataset, out_dataset, obj, item,
 
     path_tag = SubElement(root_tag, 'path')
     path_tag.text = os.path.join(output_dir, TF_FOLDER_NAME, out_dataset,
-                            '{}_{}_{}.jpg'.format(obj, out_dataset, counter))
+                                 '{}_{}_{}.jpg'.format(obj, out_dataset, counter))
 
     source_tag = SubElement(root_tag, 'source')
 
@@ -60,7 +60,7 @@ def construct_voc_xml(input_dir, output_dir, in_dataset, out_dataset, obj, item,
         name_tag = SubElement(obj_tag, 'name')
         sub = details[:-4]
         name_tag.text = (''.join(str(e + ' ') for e in sub))[:-1]
-        
+
         pose_tag = SubElement(obj_tag, 'pose')
         pose_tag.text = 'Unspecified'
 
@@ -82,10 +82,8 @@ def construct_voc_xml(input_dir, output_dir, in_dataset, out_dataset, obj, item,
 
         ymax_tag = SubElement(box_tag, 'ymax')
         ymax_tag.text = str(int(float(details[-1])))
-    
-    dom = minidom.parseString(tostring(root_tag)) 
+
+    dom = minidom.parseString(tostring(root_tag))
     formatted_xml = dom.toprettyxml()
     tree = ET.ElementTree(ET.fromstring(formatted_xml))
     tree.write(xml_path)
-
-    
