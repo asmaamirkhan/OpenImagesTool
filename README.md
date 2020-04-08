@@ -1,6 +1,6 @@
 # 🌌 OpenImages Tool
 A tool to convert OpenImages dataset format to TensorFlow-friendly format;
-- ➰ Convert xml to VOC format
+- ➰ Convert `.txt` to `.xml` (*VOC*) format
 - 🚀 Make directory structure suitable to be used in TensorFlow custom object training
 - 👩‍💻 Use presented [Code Snippets](./src/code_snippets.py) for other organizing operations
   - `string_replacer`
