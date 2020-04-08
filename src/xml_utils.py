@@ -1,10 +1,13 @@
-from xml.etree.ElementTree import Element, SubElement, Comment
+from xml.etree.ElementTree import Element, SubElement, Comment, tostring
 import xml.etree.cElementTree as ET
 import cv2
 import os
+import xmlformatter
 
 TF_FOLDER_NAME = 'images'
 LABEL_FOLDER_NAME = 'Label'
+
+from xml.dom import minidom
 
 
 def construct_voc_xml(input_dir, output_dir, in_dataset, out_dataset, obj, item, counter):
@@ -12,8 +15,8 @@ def construct_voc_xml(input_dir, output_dir, in_dataset, out_dataset, obj, item,
                             LABEL_FOLDER_NAME, item+'.txt')
     img_path = os.path.join(input_dir, in_dataset, obj, item+'.jpg')
 
-    xml_path = os.path.join(output_dir, TF_FOLDER_NAME,
-                            out_dataset, item+'.xml')
+    xml_path = os.path.join(output_dir, TF_FOLDER_NAME, out_dataset,
+                            '{}_{}_{}.xml'.format(obj, out_dataset, counter))
 
     txt_file = open(txt_path)
     img_file = cv2.imread(img_path, cv2.IMREAD_UNCHANGED)
@@ -23,10 +26,11 @@ def construct_voc_xml(input_dir, output_dir, in_dataset, out_dataset, obj, item,
     folder_tag.text = obj
 
     filename_tag = SubElement(root_tag, 'filename')
-    filename_tag.text = item+'.jpg'
+    filename_tag.text = '{}_{}_{}'.format(obj, out_dataset, counter)
 
     path_tag = SubElement(root_tag, 'path')
-    path_tag.text = img_path
+    path_tag.text = os.path.join(output_dir, TF_FOLDER_NAME, out_dataset,
+                            '{}_{}_{}.jpg'.format(obj, out_dataset, counter))
 
     source_tag = SubElement(root_tag, 'source')
 
@@ -54,9 +58,9 @@ def construct_voc_xml(input_dir, output_dir, in_dataset, out_dataset, obj, item,
         obj_tag = SubElement(root_tag, 'object')
 
         name_tag = SubElement(obj_tag, 'name')
-        #name_tag.text = details[0]
-        name_tag.text = str(details[:-4])
-
+        sub = details[:-4]
+        name_tag.text = (''.join(str(e + ' ') for e in sub))[:-1]
+        
         pose_tag = SubElement(obj_tag, 'pose')
         pose_tag.text = 'Unspecified'
 
@@ -78,6 +82,10 @@ def construct_voc_xml(input_dir, output_dir, in_dataset, out_dataset, obj, item,
 
         ymax_tag = SubElement(box_tag, 'ymax')
         ymax_tag.text = str(int(float(details[-1])))
-
-    tree = ET.ElementTree(root_tag)
+    
+    dom = minidom.parseString(tostring(root_tag)) 
+    formatted_xml = dom.toprettyxml()
+    tree = ET.ElementTree(ET.fromstring(formatted_xml))
     tree.write(xml_path)
+
+    
