@@ -31,7 +31,7 @@ def construct_voc_xml(input_dir, output_dir, in_dataset, out_dataset, obj, item,
 
     # output xml path
     xml_path = os.path.join(output_dir, TF_FOLDER_NAME, out_dataset,
-                            '{}_{}_{}.xml'.format(obj, out_dataset, counter))
+                            '{}_{}_{}.xml'.format(obj, in_dataset, counter))
 
     # open source text file 
     txt_file = open(txt_path)
@@ -47,11 +47,11 @@ def construct_voc_xml(input_dir, output_dir, in_dataset, out_dataset, obj, item,
     folder_tag.text = obj
 
     filename_tag = SubElement(root_tag, 'filename')
-    filename_tag.text = '{}_{}_{}'.format(obj, out_dataset, counter)
+    filename_tag.text = '{}_{}_{}'.format(obj, in_dataset, counter)
 
     path_tag = SubElement(root_tag, 'path')
     path_tag.text = os.path.join(output_dir, TF_FOLDER_NAME, out_dataset,
-                                 '{}_{}_{}.jpg'.format(obj, out_dataset, counter))
+                                 '{}_{}_{}.jpg'.format(obj, in_dataset, counter))
 
     source_tag = SubElement(root_tag, 'source')
 
